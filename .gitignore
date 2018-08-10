@@ -1,0 +1,9 @@
+.idea
+.DS_Store
+__pycache__
+.ipynb_checkpoints
+*.ipynb
+logdir/
+samples
+*.npy
+*.tar.bz2
