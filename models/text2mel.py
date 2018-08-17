@@ -182,5 +182,5 @@ class Text2Mel(nn.Module):
         R = torch.bmm(V, A)
         R_prime = torch.cat((R, Q), 1)
         Y_logit = self.audio_dec(R_prime)
-        Y = F.sigmoid(Y_logit)
+        Y = torch.sigmoid(Y_logit)
         return Y_logit, Y, A
