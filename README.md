@@ -7,7 +7,9 @@ based partially on the following projects:
 ## Online TTS Demo
 The following notebooks are executable on [https://colab.research.google.com ](https://colab.research.google.com):
 * [Mongolian Male Voice Demo](https://colab.research.google.com/github/tugstugi/pytorch-dc-tts/blob/master/notebooks/MongolianTTS.ipynb)
-* [English Female Voice Demo (LJ-Speech)](https://colab.research.google.com/github/tugstugi/pytorch-dc-tts/blob/master/notebooks/LJSpeechTTS.ipynb)
+* [English Female Voice Demo (LJ-Speech)](https://colab.research.google.com/github/tugstugi/pytorch-dc-tts/blob/master/notebooks/EnglishTTS.ipynb)
+
+For audio samples, visit the above notebook links.
 
 ## Training/Synthesizing English (LJ-Speech)
 1. Download the dataset: `python dl_and_preprop_dataset.py --dataset=ljspeech`
