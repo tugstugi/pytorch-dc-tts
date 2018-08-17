@@ -67,6 +67,6 @@ def download_file(url, file_path):
 
 def save_to_png(file_name, array):
     """Save the given numpy array as a PNG file."""
-    from skimage._shared._warnings import expected_warnings
-    with expected_warnings(['precision']):
-        imsave(file_name, array)
+    # from skimage._shared._warnings import expected_warnings
+    # with expected_warnings(['precision']):
+    imsave(file_name, array)
