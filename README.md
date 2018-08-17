@@ -5,7 +5,7 @@ based partially on the following projects:
 * https://github.com/r9y9/deepvoice3_pytorch (data loader sampler)
 
 ## Online TTS Demo
-
+The following notebooks are executable on [https://colab.research.google.com ](https://colab.research.google.com):
 * [Mongolian Male Voice Demo](https://colab.research.google.com/github/tugstugi/pytorch-dc-tts/blob/master/notebooks/MongolianTTS.ipynb)
 * [English Female Voice Demo (LJ-Speech)](https://colab.research.google.com/github/tugstugi/pytorch-dc-tts/blob/master/notebooks/LJSpeechTTS.ipynb)
 
@@ -19,7 +19,7 @@ based partially on the following projects:
 
 ## Training/Synthesizing Mongolian
 1. Download the dataset: `python dl_and_preprop_dataset.py --dataset=mbspeech`
-   * 5 hours audio from the [Mongolian Bible](https://www.bible.com/mn/versions/1590-2013-ariun-bibli-2013) is used as the dataset.
+   * 5 hours audio from the [Mongolian Bible](https://www.bible.com/mn/versions/1590-2013-ariun-bibli-2013) used as the dataset.
 2. Train the Text2Mel model: `python train-text2mel.py --dataset=mbspeech`
 3. Train the SSRN model: `python train-ssrn.py --dataset=mbspeech`
 4. Synthesize sentences: `python synthesize.py --dataset=mbspeech`
