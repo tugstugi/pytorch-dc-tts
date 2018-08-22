@@ -14,7 +14,6 @@ For audio samples, visit the above notebook links.
 ## Training/Synthesizing English Text-To-Speech
 The English TTS uses the [LJ-Speech](https://keithito.com/LJ-Speech-Dataset/) dataset.
 1. Download the dataset: `python dl_and_preprop_dataset.py --dataset=ljspeech`
-   * see [LJ-Speech](https://keithito.com/LJ-Speech-Dataset/)
 2. Train the Text2Mel model: `python train-text2mel.py --dataset=ljspeech`
 3. Train the SSRN model: `python train-ssrn.py --dataset=ljspeech`
 4. Synthesize sentences: `python synthesize.py --dataset=ljspeech`
