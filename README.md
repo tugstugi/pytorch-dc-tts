@@ -1,4 +1,4 @@
-PyTorch implementation of 
+PyTorch implementation of
 [Efficiently Trainable Text-to-Speech System Based on Deep Convolutional Networks with Guided Attention](https://arxiv.org/abs/1710.08969)
 based partially on the following projects:
 * https://github.com/Kyubyong/dc_tts (audio pre processing)
@@ -9,7 +9,7 @@ The following notebooks are executable on [https://colab.research.google.com ](h
 * [Mongolian Male Voice TTS Demo](https://colab.research.google.com/github/tugstugi/pytorch-dc-tts/blob/master/notebooks/MongolianTTS.ipynb)
 * [English Female Voice TTS Demo (LJ-Speech)](https://colab.research.google.com/github/tugstugi/pytorch-dc-tts/blob/master/notebooks/EnglishTTS.ipynb)
 
-For audio samples, visit the above notebook links.
+For audio samples and pretrained models, visit the above notebook links.
 
 ## Training/Synthesizing English Text-To-Speech
 The English TTS uses the [LJ-Speech](https://keithito.com/LJ-Speech-Dataset/) dataset.
