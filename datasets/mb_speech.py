@@ -75,3 +75,65 @@ class MBSpeech(Dataset):
         if 'mag_gates' in self.keys:
             data['mag_gates'] = np.ones(data['mags'].shape[0], dtype=np.int)  # TODO: because pre processing!
         return data
+
+#
+# simple method to convert mongolian numbers to text, copied from somewhere
+#
+
+
+def number2word(number):
+    digit_len = len(number)
+    digit_name = {1: '', 2: 'мянга', 3: 'сая', 4: 'тэрбум', 5: 'их наяд', 6: 'тунамал'}
+
+    if digit_len == 1:
+        return _last_digit_2_str(number)
+    if digit_len == 2:
+        return _2_digits_2_str(number)
+    if digit_len == 3:
+        return _3_digits_to_str(number)
+    if digit_len < 7:
+        return _3_digits_to_str(number[:-3], False) + ' ' + digit_name[2] + ' ' + _3_digits_to_str(number[-3:])
+
+    digitgroup = [number[0 if i - 3 < 0 else i - 3:i] for i in reversed(range(len(number), 0, -3))]
+    count = len(digitgroup)
+    i = 0
+    result = ''
+    while i < count - 1:
+        result += ' ' + (_3_digits_to_str(digitgroup[i], False) + ' ' + digit_name[count - i])
+        i += 1
+    return result.strip() + ' ' + _3_digits_to_str(digitgroup[-1])
+
+
+def _1_digit_2_str(digit):
+    return {'0': '', '1': 'нэгэн', '2': 'хоёр', '3': 'гурван', '4': 'дөрвөн', '5': 'таван', '6': 'зургаан',
+            '7': 'долоон', '8': 'найман', '9': 'есөн'}[digit]
+
+
+def _last_digit_2_str(digit):
+    return {'0': 'тэг', '1': 'нэг', '2': 'хоёр', '3': 'гурав', '4': 'дөрөв', '5': 'тав', '6': 'зургаа', '7': 'долоо',
+            '8': 'найм', '9': 'ес'}[digit]
+
+
+def _2_digits_2_str(digit, is_fina=True):
+    word2 = {'0': '', '1': 'арван', '2': 'хорин', '3': 'гучин', '4': 'дөчин', '5': 'тавин', '6': 'жаран', '7': 'далан',
+             '8': 'наян', '9': 'ерэн'}
+    word2fina = {'10': 'арав', '20': 'хорь', '30': 'гуч', '40': 'дөч', '50': 'тавь', '60': 'жар', '70': 'дал',
+                 '80': 'ная', '90': 'ер'}
+    if digit[1] == '0':
+        return word2fina[digit] if is_fina else word2[digit[0]]
+    digit1 = _last_digit_2_str(digit[1]) if is_fina else _1_digit_2_str(digit[1])
+    return (word2[digit[0]] + ' ' + digit1).strip()
+
+
+def _3_digits_to_str(digit, is_fina=True):
+    digstr = digit.lstrip('0')
+    if len(digstr) == 0:
+        return ''
+    if len(digstr) == 1:
+        return _1_digit_2_str(digstr)
+    if len(digstr) == 2:
+        return _2_digits_2_str(digstr, is_fina)
+    if digit[-2:] == '00':
+        return _1_digit_2_str(digit[0]) + ' зуу' if is_fina else _1_digit_2_str(digit[0]) + ' зуун'
+    else:
+        return _1_digit_2_str(digit[0]) + ' зуун ' + _2_digits_2_str(digit[-2:], is_fina)
