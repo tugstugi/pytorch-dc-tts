@@ -79,8 +79,7 @@ def train(train_epoch, phase='train'):
     running_l1_loss = 0.0
     running_att_loss = 0.0
 
-    disable_pbar = False if hp.comet_ml_api_key is None else True
-    pbar = tqdm(data_loader, unit="audios", unit_scale=data_loader.batch_size, disable=disable_pbar)
+    pbar = tqdm(data_loader, unit="audios", unit_scale=data_loader.batch_size, disable=hp.disable_progress_bar)
     for batch in pbar:
         L, S, gates = batch['texts'], batch['mels'], batch['mel_gates']
         S = S.permute(0, 2, 1)  # TODO: because of pre processing

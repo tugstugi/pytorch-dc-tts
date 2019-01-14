@@ -5,7 +5,7 @@ __author__ = 'Erdene-Ochir Tuguldur'
 class HParams:
     """Hyper parameters"""
 
-    comet_ml_api_key = None  # API key for comet.ml if you want to log into comet.ml
+    disable_progress_bar = False  # set True if you don't want the progress bar in the console
 
     logdir = "logdir"  # log dir where the checkpoints and tensorboard files are saved
 
