@@ -137,7 +137,7 @@ def train(train_epoch, phase='train'):
                 'att': "%.05f" % (running_att_loss / it)
             })
             logger.log_step(phase, global_step, {'loss_l1': l1_loss, 'loss_att': att_loss},
-                            {'mels-true': S[0, :, :], 'mels-pred': Y[0, :, :], 'attention': A[0, :, :]})
+                            {'mels-true': S[:1, :, :], 'mels-pred': Y[:1, :, :], 'attention': A[:1, :, :]})
             if global_step % 5000 == 0:
                 # checkpoint at every 5000th step
                 save_checkpoint(logger.logdir, train_epoch, global_step, text2mel, optimizer)
