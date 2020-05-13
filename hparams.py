@@ -11,7 +11,7 @@ class HParams:
 
     # audio.py options, these values are from https://github.com/Kyubyong/dc_tts/blob/master/hyperparams.py
     reduction_rate = 4  # melspectrogram reduction rate, don't change because SSRN is using this rate
-    n_fft = 2048 # fft points (samples)
+    n_fft = 1024 # same as WaveGlow
     n_mels = 80  # Number of Mel banks to generate
     power = 1.5  # Exponent for amplifying the predicted magnitude
     n_iter = 50  # Number of inversion iterations
@@ -19,10 +19,10 @@ class HParams:
     max_db = 100
     ref_db = 20
     sr = 22050  # Sampling rate
-    frame_shift = 0.0125  # seconds
-    frame_length = 0.05  # seconds
-    hop_length = int(sr * frame_shift)  # samples. =276.
-    win_length = int(sr * frame_length)  # samples. =1102.
+    # frame_shift = 0.0125  # seconds
+    # frame_length = 0.05  # seconds
+    hop_length = 256  # same as WaveGlow
+    win_length = 1024  # same as WaveGlow
     max_N = 180  # Maximum number of characters.
     max_T = 210  # Maximum number of mel frames.
 

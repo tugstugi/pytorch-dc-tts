@@ -132,7 +132,7 @@ def preprocess(dataset_path, speech_dataset):
         mel = np.pad(mel, [[0, num_paddings], [0, 0]], mode="constant")
         mag = np.pad(mag, [[0, num_paddings], [0, 0]], mode="constant")
         # Reduction
-        mel = mel[::hp.reduction_rate, :]
+        # mel = mel[::hp.reduction_rate, :]
 
         np.save(os.path.join(mels_path, '%s.npy' % fname), mel)
         np.save(os.path.join(mags_path, '%s.npy' % fname), mag)

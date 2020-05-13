@@ -6,7 +6,7 @@ https://arxiv.org/abs/1710.08969
 SSRN Network.
 """
 __author__ = 'Erdene-Ochir Tuguldur'
-__all__ = ['SSRN']
+__all__ = ['SSRN', 'SSRNv2']
 
 import torch.nn as nn
 import torch.nn.functional as F
@@ -71,6 +71,44 @@ class SSRN(nn.Module):
             BasicBlock(f_prime, 1, 1),
 
             Conv(f_prime, f_prime, 1, 1)
+        )
+
+    def forward(self, x):
+        Z_logit = self.layers(x)
+        Z = F.sigmoid(Z_logit)
+        return Z_logit, Z
+
+
+class SSRNv2(nn.Module):
+    def __init__(self, c=hp.c, f=hp.n_mels):
+        """Mel Spectrogram super-resolution network.
+        Args:
+            c: SSRN dim
+            f: Number of mel bins
+        Input:
+            Y: (B, f, T) predicted reduced melspectrograms
+        Outputs:
+            Z_logit: logit of Z
+            Z: (B, f, 4*T) full mel spectrograms
+        """
+        super(SSRNv2, self).__init__()
+        self.layers = nn.Sequential(
+            Conv(f, c, 1, 1),
+
+            BasicBlock(c, 3, 1), BasicBlock(c, 3, 3),
+
+            DeConv(c, c, 2, 1), BasicBlock(c, 3, 1), BasicBlock(c, 3, 3),
+            DeConv(c, c, 2, 1), BasicBlock(c, 3, 1), BasicBlock(c, 3, 3),
+
+            Conv(c, 2 * c, 1, 1),
+
+            BasicBlock(2 * c, 3, 1), BasicBlock(2 * c, 3, 1),
+
+            Conv(2 * c, f, 1, 1),
+
+            BasicBlock(f, 1, 1),
+
+            Conv(f, f, 1, 1)
         )
 
     def forward(self, x):

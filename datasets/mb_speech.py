@@ -5,6 +5,8 @@ import numpy as np
 
 from torch.utils.data import Dataset
 
+from hparams import HParams as hp
+
 vocab = "PE абвгдеёжзийклмноөпрстуүфхцчшъыьэюя-.,!?"  # P: Padding, E: EOS.
 char2idx = {char: idx for idx, char in enumerate(vocab)}
 idx2char = {idx: char for idx, char in enumerate(vocab)}
@@ -65,6 +67,11 @@ class MBSpeech(Dataset):
         if 'texts' in self.keys:
             data['texts'] = self.texts[index]
         if 'mels' in self.keys:
+            # (39, 80)
+            data['mels'] = np.load(os.path.join(self.path, 'mels', "%s.npy" % self.fnames[index]))
+            # Reduction
+            data['mels'] = data['mels'][::hp.reduction_rate, :]
+        if 'mels-full' in self.keys:
             # (39, 80)
             data['mels'] = np.load(os.path.join(self.path, 'mels', "%s.npy" % self.fnames[index]))
         if 'mags' in self.keys:

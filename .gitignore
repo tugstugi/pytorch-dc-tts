@@ -7,3 +7,5 @@ logdir/
 samples
 *.npy
 *.tar.bz2
+tacotron2
+*waveglow*

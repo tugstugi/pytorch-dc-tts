@@ -21,6 +21,7 @@ from datasets.data_loader import Text2MelDataLoader
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--dataset", required=True, choices=['ljspeech', 'mbspeech'], help='dataset name')
+parser.add_argument("--warm-start", type=str, help='fine tune from an already trained model')
 args = parser.parse_args()
 
 if args.dataset == 'ljspeech':
@@ -47,6 +48,10 @@ start_epoch = 0
 global_step = 0
 
 logger = Logger(args.dataset, 'text2mel')
+
+# load already trained model to fine tune, assuming it was original DC-TTS model
+if args.warm_start:
+    text2mel.load_state_dict(torch.load(args.warm_start).state_dict())
 
 # load the last checkpoint if exists
 last_checkpoint_file_name = get_last_checkpoint_file_name(logger.logdir)

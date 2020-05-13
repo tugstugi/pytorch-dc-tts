@@ -11,7 +11,7 @@ import torch
 import torch.nn.functional as F
 
 # project imports
-from models import SSRN
+from models import SSRN, SSRNv2
 from hparams import HParams as hp
 from logger import Logger
 from utils import get_last_checkpoint_file_name, load_checkpoint, save_checkpoint
@@ -19,6 +19,9 @@ from datasets.data_loader import SSRNDataLoader
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--dataset", required=True, choices=['ljspeech', 'mbspeech'], help='dataset name')
+parser.add_argument("--warm-start", type=str, help='fine tune from an already trained model')
+parser.add_argument("--model", choices=['SSRN', 'SSRNv2'], default='SSRN',
+                    help='choices of neural network')
 args = parser.parse_args()
 
 if args.dataset == 'ljspeech':
@@ -31,10 +34,17 @@ print('use_gpu', use_gpu)
 if use_gpu:
     torch.backends.cudnn.benchmark = True
 
-train_data_loader = SSRNDataLoader(ssrn_dataset=SpeechDataset(['mags', 'mels']), batch_size=24, mode='train')
-valid_data_loader = SSRNDataLoader(ssrn_dataset=SpeechDataset(['mags', 'mels']), batch_size=24, mode='valid')
+train_data_loader = SSRNDataLoader(
+    ssrn_dataset=SpeechDataset(['mels-full' if args.model == 'SSRNv2' else 'mags', 'mels']), batch_size=20,
+    mode='train')
+valid_data_loader = SSRNDataLoader(
+    ssrn_dataset=SpeechDataset(['mels-full' if args.model == 'SSRNv2' else 'mags', 'mels']), batch_size=20,
+    mode='valid')
 
-ssrn = SSRN().cuda()
+if args.model == 'SSRNv2':
+    ssrn = SSRNv2().cuda()
+else:
+    ssrn = SSRN().cuda()
 
 optimizer = torch.optim.Adam(ssrn.parameters(), lr=hp.ssrn_lr)
 
@@ -43,6 +53,16 @@ start_epoch = 0
 global_step = 0
 
 logger = Logger(args.dataset, 'ssrn')
+
+# load already trained model to fine tune, assuming it was original DC-TTS model
+if args.warm_start:
+    state_dict = torch.load(args.warm_start).state_dict()
+    # remove last 3 layer weights
+    new_state_dict = {}
+    for key, value in state_dict.items():
+        if not (key.startswith('layers.12') or key.startswith('layers.13') or key.startswith('layers.14')):
+            new_state_dict[key] = value
+    ssrn.load_state_dict(new_state_dict, strict=False)
 
 # load the last checkpoint if exists
 last_checkpoint_file_name = get_last_checkpoint_file_name(logger.logdir)
@@ -76,7 +96,7 @@ def train(train_epoch, phase='train'):
 
     pbar = tqdm(data_loader, unit="audios", unit_scale=data_loader.batch_size, disable=hp.disable_progress_bar)
     for batch in pbar:
-        M, S = batch['mags'], batch['mels']
+        M, S = batch['mels-full' if args.model == 'SSRNv2' else 'mags'], batch['mels']
         M = M.permute(0, 2, 1)  # TODO: because of pre processing
         S = S.permute(0, 2, 1)  # TODO: because of pre processing
 
