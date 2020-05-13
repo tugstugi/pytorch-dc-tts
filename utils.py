@@ -9,6 +9,7 @@ import math
 import requests
 from tqdm import tqdm
 from skimage.io import imsave
+from skimage import img_as_ubyte
 
 
 def get_last_checkpoint_file_name(logdir):
@@ -69,4 +70,4 @@ def save_to_png(file_name, array):
     """Save the given numpy array as a PNG file."""
     # from skimage._shared._warnings import expected_warnings
     # with expected_warnings(['precision']):
-    imsave(file_name, array)
+    imsave(file_name, img_as_ubyte(array))
