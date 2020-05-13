@@ -21,8 +21,10 @@ class HParams:
     sr = 22050  # Sampling rate
     # frame_shift = 0.0125  # seconds
     # frame_length = 0.05  # seconds
-    hop_length = 256  # same as WaveGlow
+    hop_length = 256   # same as WaveGlow
     win_length = 1024  # same as WaveGlow
+    mel_fmin = 0.0     # same as WaveGlow
+    mel_fmax = 8000.0  # same as WaveGlow
     max_N = 180  # Maximum number of characters.
     max_T = 210  # Maximum number of mel frames.
 
