@@ -23,23 +23,6 @@ def text_normalize(text):
     return text
 
 
-# def read_metadata(metadata_file):
-#     fnames, text_lengths, texts = [], [], []
-#     transcript = os.path.join(metadata_file)
-#     lines = codecs.open(transcript, 'r', 'utf-8').readlines()
-#     for line in lines:
-#         fname, _, text = line.strip().split("|")
-#
-#         fnames.append(fname)
-#
-#         text = text_normalize(text) + "E"  # E: EOS
-#         text = [char2idx[char] for char in text]
-#         text_lengths.append(len(text))
-#         texts.append(np.array(text, np.long))
-#
-#     return fnames, text_lengths, texts
-
-
 def read_metadata(csv_file, subset='*'):
     df = pd.read_csv(csv_file)
     if subset == '*':
@@ -72,7 +55,6 @@ class ESDSpeech(Dataset):
     def __init__(self, keys, dir_name='EmotionalSpeechDataset'):
         self.keys = keys
         self.path = os.path.join(os.path.dirname(os.path.realpath(__file__)), dir_name)
-        # self.fnames, self.text_lengths, self.texts = read_metadata(os.path.join(self.path, 'metadata.csv'))
         self.fnames, self.text_lengths, self.texts = read_metadata(os.path.join(self.path, 'ESD.csv'))
 
     def slice(self, start, end):
