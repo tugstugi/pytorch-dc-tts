@@ -16,11 +16,37 @@ from audio import save_to_wav
 from utils import get_last_checkpoint_file_name, load_checkpoint, save_to_png
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("--dataset", required=True, choices=['ljspeech', 'mbspeech'], help='dataset name')
+parser.add_argument("--dataset", required=True, choices=['ljspeech', 'mbspeech', 'esdspeech'], help='dataset name')
 args = parser.parse_args()
 
 if args.dataset == 'ljspeech':
     from datasets.lj_speech import vocab, get_test_data
+
+    SENTENCES = [
+        "The birch canoe slid on the smooth planks.",
+        "Glue the sheet to the dark blue background.",
+        "It's easy to tell the depth of a well.",
+        "These days a chicken leg is a rare dish.",
+        "Rice is often served in round bowls.",
+        "The juice of lemons makes fine punch.",
+        "The box was thrown beside the parked truck.",
+        "The hogs were fed chopped corn and garbage.",
+        "Four hours of steady work faced us.",
+        "Large size in stockings is hard to sell.",
+        "The boy was there when the sun rose.",
+        "A rod is used to catch pink salmon.",
+        "The source of the huge river is the clear spring.",
+        "Kick the ball straight and follow through.",
+        "Help the woman get back to her feet.",
+        "A pot of tea helps to pass the evening.",
+        "Smoky fires lack flame and heat.",
+        "The soft cushion broke the man's fall.",
+        "The salt breeze came across from the sea.",
+        "The girl at the booth sold fifty bonds."
+    ]
+
+elif args.dataset == 'esdspeech':
+    from datasets.esd_speech import vocab, get_test_data
 
     SENTENCES = [
         "The birch canoe slid on the smooth planks.",

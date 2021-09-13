@@ -20,17 +20,23 @@ from utils import get_last_checkpoint_file_name, load_checkpoint, save_checkpoin
 from datasets.data_loader import Text2MelDataLoader
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("--dataset", required=True, choices=['ljspeech', 'mbspeech'], help='dataset name')
+parser.add_argument("--dataset", required=True, choices=['ljspeech', 'mbspeech', 'esdspeech'], help='dataset name')
 args = parser.parse_args()
 
 if args.dataset == 'ljspeech':
     from datasets.lj_speech import vocab, LJSpeech as SpeechDataset
+elif args.dataset == 'esdspeech':
+    from datasets.esd_speech import vocab, ESDSpeech as SpeechDataset
 else:
     from datasets.mb_speech import vocab, MBSpeech as SpeechDataset
 
 use_gpu = torch.cuda.is_available()
+# use_gpu = False
 print('use_gpu', use_gpu)
+
+device = 'cpu'
 if use_gpu:
+    device = 'cuda:1'
     torch.backends.cudnn.benchmark = True
 
 train_data_loader = Text2MelDataLoader(text2mel_dataset=SpeechDataset(['texts', 'mels', 'mel_gates']), batch_size=64,
@@ -38,7 +44,7 @@ train_data_loader = Text2MelDataLoader(text2mel_dataset=SpeechDataset(['texts', 
 valid_data_loader = Text2MelDataLoader(text2mel_dataset=SpeechDataset(['texts', 'mels', 'mel_gates']), batch_size=64,
                                        mode='valid')
 
-text2mel = Text2Mel(vocab).cuda()
+text2mel = Text2Mel(vocab).to(device)
 
 optimizer = torch.optim.Adam(text2mel.parameters(), lr=hp.text2mel_lr)
 
@@ -102,11 +108,12 @@ def train(train_epoch, phase='train'):
         W = np.fromfunction(W_nt, (B, N, T), dtype=np.float32)
         W = torch.from_numpy(W)
 
-        L = L.cuda()
-        S = S.cuda()
-        S_shifted = S_shifted.cuda()
-        W = W.cuda()
-        gates = gates.cuda()
+        L = L.to(device)
+        S = S.to(device)
+        S_shifted = S_shifted.to(device)
+        W = W.to(device)
+        gates = gates.to(device)
+        gates = gates.to(device)
 
         Y_logit, Y, A = text2mel(L, S)
 
