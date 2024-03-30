@@ -72,7 +72,7 @@ class LJSpeech(Dataset):
             # (39, 80)
             data['mags'] = np.load(os.path.join(self.path, 'mags', "%s.npy" % self.fnames[index]))
         if 'mel_gates' in self.keys:
-            data['mel_gates'] = np.ones(data['mels'].shape[0], dtype=np.int)  # TODO: because pre processing!
+            data['mel_gates'] = np.ones(data['mels'].shape[0], dtype=np.int64)  # TODO: because pre processing!
         if 'mag_gates' in self.keys:
-            data['mag_gates'] = np.ones(data['mags'].shape[0], dtype=np.int)  # TODO: because pre processing!
+            data['mag_gates'] = np.ones(data['mags'].shape[0], dtype=np.int64)  # TODO: because pre processing!
         return data
