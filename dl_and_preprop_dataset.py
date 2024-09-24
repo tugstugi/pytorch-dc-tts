@@ -5,24 +5,26 @@
 """
 __author__ = 'Erdene-Ochir Tuguldur'
 
-import os
-import sys
-import csv
-import time
 import argparse
+import csv
+import sys
+import time
+from zipfile import ZipFile
+
 import fnmatch
 import librosa
+import os
 import pandas as pd
 
-from hparams import HParams as hp
-from zipfile import ZipFile
 from audio import preprocess
-from utils import download_file
-from datasets.mb_speech import MBSpeech
+from datasets.esd_speech import ESDSpeech
 from datasets.lj_speech import LJSpeech
+from datasets.mb_speech import MBSpeech
+from hparams import HParams as hp
+from utils import download_file
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("--dataset", required=True, choices=['ljspeech', 'mbspeech'], help='dataset name')
+parser.add_argument("--dataset", required=True, choices=['ljspeech', 'esdspeech', 'mbspeech'], help='dataset name')
 args = parser.parse_args()
 
 if args.dataset == 'ljspeech':
@@ -30,7 +32,7 @@ if args.dataset == 'ljspeech':
     datasets_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'datasets')
     dataset_path = os.path.join(datasets_path, 'LJSpeech-1.1')
 
-    if os.path.isdir(dataset_path) and False:
+    if os.path.isdir(dataset_path):
         print("LJSpeech dataset folder already exists")
         sys.exit(0)
     else:
@@ -48,12 +50,27 @@ if args.dataset == 'ljspeech':
         print("pre processing...")
         lj_speech = LJSpeech([])
         preprocess(dataset_path, lj_speech)
+elif args.dataset == 'esdspeech':
+    datasets_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'datasets')
+    dataset_path = os.path.join(datasets_path, 'EmotionalSpeechDataset')
+
+    if os.path.isdir(dataset_path):
+        print("EmotionalSpeechDataset dataset folder already exists")
+    else:
+        print("Please Download the ESD Dataset")
+
+    print("pre processing...")
+    esd_speech = ESDSpeech([])
+    preprocess(dataset_path, esd_speech)
+
+
+
 elif args.dataset == 'mbspeech':
     dataset_name = 'MBSpeech-1.0'
     datasets_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'datasets')
     dataset_path = os.path.join(datasets_path, dataset_name)
 
-    if os.path.isdir(dataset_path) and False:
+    if os.path.isdir(dataset_path):
         print("MBSpeech dataset folder already exists")
         sys.exit(0)
     else:

@@ -18,23 +18,28 @@ from utils import get_last_checkpoint_file_name, load_checkpoint, save_checkpoin
 from datasets.data_loader import SSRNDataLoader
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("--dataset", required=True, choices=['ljspeech', 'mbspeech'], help='dataset name')
+parser.add_argument("--dataset", required=True, choices=['ljspeech', 'mbspeech', 'esdspeech'], help='dataset name')
 args = parser.parse_args()
 
 if args.dataset == 'ljspeech':
     from datasets.lj_speech import LJSpeech as SpeechDataset
+elif args.dataset == 'esdspeech':
+    from datasets.esd_speech import ESDSpeech as SpeechDataset
 else:
     from datasets.mb_speech import MBSpeech as SpeechDataset
 
 use_gpu = torch.cuda.is_available()
 print('use_gpu', use_gpu)
+
+device = 'cpu'
 if use_gpu:
+    device = 'cuda:0'
     torch.backends.cudnn.benchmark = True
 
 train_data_loader = SSRNDataLoader(ssrn_dataset=SpeechDataset(['mags', 'mels']), batch_size=24, mode='train')
 valid_data_loader = SSRNDataLoader(ssrn_dataset=SpeechDataset(['mags', 'mels']), batch_size=24, mode='valid')
 
-ssrn = SSRN().cuda()
+ssrn = SSRN().to(device)
 
 optimizer = torch.optim.Adam(ssrn.parameters(), lr=hp.ssrn_lr)
 
@@ -81,8 +86,8 @@ def train(train_epoch, phase='train'):
         S = S.permute(0, 2, 1)  # TODO: because of pre processing
 
         M.requires_grad = False
-        M = M.cuda()
-        S = S.cuda()
+        M = M.to(device)
+        S = S.to(device)
 
         Z_logit, Z = ssrn(S)
 
