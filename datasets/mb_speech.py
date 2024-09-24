@@ -33,14 +33,14 @@ def read_metadata(metadata_file):
         text = text_normalize(text) + "E"  # E: EOS
         text = [char2idx[char] for char in text]
         text_lengths.append(len(text))
-        texts.append(np.array(text, np.long))
+        texts.append(np.array(text, np.longlong))
 
     return fnames, text_lengths, texts
 
 
 def get_test_data(sentences, max_n):
     normalized_sentences = [text_normalize(line).strip() + "E" for line in sentences]  # text normalization, E: EOS
-    texts = np.zeros((len(normalized_sentences), max_n + 1), np.long)
+    texts = np.zeros((len(normalized_sentences), max_n + 1), np.longlong)
     for i, sent in enumerate(normalized_sentences):
         texts[i, :len(sent)] = [char2idx[char] for char in sent]
     return texts
@@ -71,9 +71,9 @@ class MBSpeech(Dataset):
             # (39, 80)
             data['mags'] = np.load(os.path.join(self.path, 'mags', "%s.npy" % self.fnames[index]))
         if 'mel_gates' in self.keys:
-            data['mel_gates'] = np.ones(data['mels'].shape[0], dtype=np.int)  # TODO: because pre processing!
+            data['mel_gates'] = np.ones(data['mels'].shape[0], dtype=np.int64)  # TODO: because pre processing!
         if 'mag_gates' in self.keys:
-            data['mag_gates'] = np.ones(data['mags'].shape[0], dtype=np.int)  # TODO: because pre processing!
+            data['mag_gates'] = np.ones(data['mags'].shape[0], dtype=np.int64)  # TODO: because pre processing!
         return data
 
 #

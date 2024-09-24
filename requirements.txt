@@ -2,7 +2,7 @@ librosa>=0.5.1
 torch>=0.4
 tensorboardX>=1.2
 tqdm>=4.15.0
-numpy>=1.13.1
+numpy>=1.25.0
 scipy
 pandas
 requests
